@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LVAEP Tutor Hub</title>
+  <style>
+    :root{--ink:#24323a;--muted:#6f7d82;--paper:#fff;--bg:#f4f6f4;--line:#dfe6e3;--teal:#2f827d;--teal-dark:#236965;--coral:#cf8767;--gold:#c49a4b;--blue:#6688a8;--danger:#a95555;--shadow:0 10px 28px rgba(35,55,55,.08)}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+    body{line-height:1.45}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .app-shell{display:flex;min-height:100vh}
+    .sidebar{width:250px;background:#183d3a;color:#eef7f5;padding:24px 16px;display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:20}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:17px;line-height:1.05;margin:4px 8px 34px}
+    .brand small{font-weight:500;font-size:11px;opacity:.7}
+    .brand-mark{width:34px;height:34px;border-radius:10px;background:#8dbbb5;color:#183d3a;display:grid;place-items:center;font-weight:900}
+    nav{display:grid;gap:6px}
+    .nav-item{border:0;background:transparent;color:#dceae7;text-align:left;padding:12px 13px;border-radius:10px;display:flex;align-items:center;gap:10px;font-weight:650}
+    .nav-item:hover,.nav-item.active{background:#2b625e;color:white}
+    .nav-item span{width:20px;text-align:center;opacity:.9}
+    .sidebar-bottom{margin-top:auto}
+    .helper-card{background:#24534f;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:15px;margin-bottom:13px;font-size:13px}
+    .helper-card p{margin:6px 0 10px;color:#c5d8d5}
+    .helper-card a{color:#fff}
+    .text-button{border:0;background:transparent;color:#bed2cf;padding:8px;text-align:left}
+    .main-content{margin-left:250px;width:calc(100% - 250px);padding:28px 34px 60px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+    .topbar>div:first-of-type{min-width:0}
+    .eyebrow{font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--teal);margin:0 0 5px}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:28px;margin-bottom:0}
+    h2{font-size:28px;line-height:1.15;margin:0 0 7px}
+    h3{font-size:18px;margin:0}
+    .profile{display:flex;align-items:center;gap:10px}
+    .profile small{display:block;color:var(--muted);font-size:12px}
+    .avatar,.initial{display:grid;place-items:center;border-radius:50%;color:white;font-weight:800}
+    .avatar{width:40px;height:40px;background:#7d9b98;font-size:13px}
+    .mobile-menu{display:none}
+    .view{display:none}
+    .view.active{display:block}
+    .welcome-card{background:#dfeeea;border-radius:18px;padding:28px 30px;display:flex;justify-content:space-between;min-height:190px;overflow:hidden}
+    .welcome-card h2{max-width:560px}
+    .welcome-card p:not(.eyebrow){color:#506a67;max-width:600px}
+    .welcome-art{width:220px;position:relative;opacity:.75}
+    .book{position:absolute;right:50px;top:65px;font-size:70px;color:#6c9e99}
+    .plant{position:absolute;right:8px;bottom:0;font-size:80px;color:#568b85}
+    .spark{position:absolute;color:#cf8767;font-size:22px}.spark-1{right:125px;top:22px}.spark-2{right:15px;top:58px}
+    .primary-button,.secondary-button,.danger-button,.link-button{border-radius:9px;padding:10px 15px;font-weight:750;border:1px solid transparent}
+    .primary-button{background:var(--teal);color:white}.primary-button:hover{background:var(--teal-dark)}
+    .secondary-button{background:white;color:var(--ink);border-color:#ccd8d5}.secondary-button:hover{background:#f7faf9}
+    .danger-button{background:var(--danger);color:white}
+    .link-button{background:none;border:0;color:var(--teal);padding:5px}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:18px 0}
+    .stat-grid article{background:white;border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;gap:13px;align-items:center}
+    .stat-grid article b{font-size:24px}.stat-grid p{margin:1px 0 0;color:var(--muted);font-size:13px}
+    .stat-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center}.coral{background:#f7e4dc;color:#a96044}.gold{background:#f5eddc;color:#92702c}.blue{background:#e2ebf3;color:#4d7191}
+    .content-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+    .card{background:white;border:1px solid var(--line);border-radius:15px;padding:20px;box-shadow:var(--shadow)}
+    .card-heading,.section-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+    .session-list{margin-top:13px}.session-row{display:grid;grid-template-columns:45px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid #edf1ef}
+    .session-date{font-weight:850;font-size:18px;text-align:center}.session-date small{display:block;font-size:10px;color:var(--muted);text-transform:uppercase}
+    .session-name{display:block;font-weight:750}.session-note{display:block;color:var(--muted);font-size:12px;margin-top:2px}.session-time{font-weight:750}
+    .progress-track,.mini-track{height:9px;background:#e8eeec;border-radius:20px;overflow:hidden}.progress-bar,.mini-bar{height:100%;background:var(--teal);border-radius:20px}
+    .progress-track{margin:22px 0 10px}.muted{color:var(--muted);font-size:13px}
+    .student-hours{display:grid;gap:12px;margin-top:20px}.student-hour-row{display:grid;grid-template-columns:65px 1fr 28px;gap:9px;align-items:center;font-size:13px}.mini-track{height:7px}
+    .section-heading{margin-bottom:20px;align-items:end}.section-heading>div:first-child{max-width:700px}.section-heading p:not(.eyebrow){color:var(--muted);margin:0}
+    .filter-bar{display:flex;gap:15px;align-items:end;flex-wrap:wrap;background:#edf2f0;border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:15px}
+    label{display:grid;gap:5px;font-size:13px;font-weight:700}.filter-bar label{min-width:170px}
+    input,select,textarea{border:1px solid #cdd9d6;border-radius:8px;padding:9px 10px;background:white;color:var(--ink);outline:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(47,130,125,.12)}
+    .filter-total{margin-left:auto;display:grid;text-align:right}.filter-total b{font-size:18px}.filter-total span,.achievement-total span{font-size:12px;color:var(--muted)}
+    .table-card{padding:0;overflow:auto}.table-card table{min-width:700px}.table-card table,.report-paper table{width:100%;border-collapse:collapse}
+    th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #edf1ef;font-size:13px}th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:#fafcfb}
+    .status-pill{display:inline-block;border-radius:20px;background:#e7f1ee;color:#356c66;padding:3px 8px;font-size:11px;font-weight:800;margin-right:7px}.session-delete{border:0;background:transparent;color:#a56b61;font-size:22px}
+    .empty-state{padding:28px;text-align:center;color:var(--muted)}.hidden{display:none!important}
+    .achievement-total{display:grid;text-align:right}.achievement-total b{font-size:25px}
+    .achievement-students{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.achievement-card{background:white;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:var(--shadow)}
+    .achievement-card-head,.student-card-head{display:flex;gap:12px;align-items:center}.initial{width:44px;height:44px}.achievement-card-head p,.student-card-head p{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:18px}.goal-group h4{text-transform:capitalize;margin:0 0 7px;font-size:12px;color:var(--teal)}
+    .goal-option{display:flex;grid-template-columns:auto 1fr;align-items:start;gap:8px;padding:5px 0;font-weight:500;font-size:12px}.goal-option input{margin-top:2px;padding:0}.goal-option.done span{text-decoration:line-through;color:var(--muted)}
+    .report-heading{align-items:end}.button-row{display:flex;gap:8px;flex-wrap:wrap}
+    .report-filter{justify-content:space-between}.report-paper{background:white;border:1px solid #d7dfdc;box-shadow:var(--shadow);border-radius:4px;padding:30px;max-width:1000px}
+    .report-top{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid var(--teal);padding-bottom:17px}.report-brand{font-size:28px;font-weight:900;color:var(--teal)}.report-top p{margin:2px 0;color:var(--muted);font-size:11px}
+    .report-period{text-align:right;display:grid;gap:3px}.report-period span{color:var(--teal);font-weight:750}
+    .report-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;padding:18px 0}.report-meta span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.report-meta b{display:block;margin-top:3px}
+    .status-complete{color:var(--teal)}.report-section{margin-top:22px}.report-section h3{font-size:15px;border-bottom:1px solid var(--line);padding-bottom:8px}
+    .report-achievements{display:grid;gap:7px}.report-achievement{background:#f6f9f8;border-left:3px solid var(--teal);padding:9px 11px;font-size:13px}
+    .report-footer{border-top:1px solid var(--line);margin-top:30px;padding-top:12px;display:flex;justify-content:space-between;color:var(--muted);font-size:10px}
+    .site-request{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.site-request h3{margin:0}.student-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.student-card{background:white;border:1px solid var(--line);border-radius:15px;padding:20px;box-shadow:var(--shadow)}
+    .student-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}.student-stats>div{background:#f6f9f8;border-radius:10px;padding:12px}.student-stats b{display:block}.student-stats span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+    dialog{border:0;border-radius:16px;padding:0;width:min(650px,calc(100vw - 30px));box-shadow:0 25px 80px rgba(0,0,0,.22)}dialog::backdrop{background:rgba(15,35,35,.42)}.modal{padding:24px}
+    .modal-heading{display:flex;justify-content:space-between;align-items:start;margin-bottom:18px}.close-button{border:0;background:transparent;font-size:27px;line-height:1;color:var(--muted)}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.full-width{grid-column:1/-1}.homework-toggle{margin:16px 0;padding:12px;background:#f5f8f7;border-radius:9px}.homework-toggle label{display:flex;align-items:center;display:flex}.homework-toggle input,.modal input[type=checkbox]{width:auto}
+    .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.modal p{color:var(--muted);font-size:13px}.modal textarea{resize:vertical}.modal select{min-width:0}
+    #toast{position:fixed;right:22px;bottom:22px;background:#183d3a;color:white;border-radius:9px;padding:11px 15px;box-shadow:0 12px 35px rgba(0,0,0,.2);opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;z-index:50;font-size:13px}#toast.show{opacity:1;transform:none}
+    @media(max-width:900px){.sidebar{transform:translateX(-100%);transition:.2s}.sidebar.open{transform:none}.main-content{margin-left:0;width:100%;padding:22px}.mobile-menu{display:block;border:0;background:white;border-radius:8px;padding:8px 10px;margin-right:10px}.topbar{justify-content:flex-start}.topbar .profile{margin-left:auto}.content-grid,.achievement-students,.student-card-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:1fr}.welcome-art{display:none}}
+    @media(max-width:600px){.main-content{padding:15px}.topbar{align-items:center}.topbar h1{font-size:22px}.profile>div:last-child{display:none}.welcome-card{padding:20px}.section-heading,.site-request{display:block}.section-heading>.button-row,.site-request>button{margin-top:13px}.filter-total{margin-left:0;text-align:left}.goals-grid,.form-grid,.report-meta{grid-template-columns:1fr}.report-top,.report-footer{display:block}.report-period{text-align:left;margin-top:12px}.report-paper{padding:18px;overflow:auto}.report-paper table{min-width:650px}.student-stats{grid-template-columns:1fr}}
+    @media print{body{background:white}.sidebar,.topbar,.section-heading,.report-filter{display:none!important}.main-content{margin:0;width:100%;padding:0}.view{display:none!important}#report{display:block!important}.report-paper{box-shadow:none;border:0;max-width:none}.report-paper{padding:0}}
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">L</span><span>LVAEP<br><small>Tutor Hub</small></span></div>
+      <nav aria-label="Main navigation">
+        <button class="nav-item active" data-view="dashboard"><span>⌂</span> Overview</button>
+        <button class="nav-item" data-view="hours"><span>◷</span> Hour log</button>
+        <button class="nav-item" data-view="homework"><span>▣</span> Homework & credits</button>
+        <button class="nav-item" data-view="achievements"><span>✓</span> Achievements</button>
+        <button class="nav-item" data-view="report"><span>▤</span> Monthly report</button>
+        <button class="nav-item" data-view="students"><span>◉</span> My students</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="helper-card"><b>Need a hand?</b><p>Contact LVAEP staff for support with your students or reports.</p><a href="mailto:info@lvaep.org">Contact staff →</a></div><button id="resetData" class="text-button">Reset example data</button></div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar"><button class="mobile-menu" id="mobileMenu" aria-label="Open menu">☰</button><div><p class="eyebrow">TUTOR PORTAL</p><h1 id="pageTitle">Good morning, Maya</h1></div><div class="profile"><div class="avatar">MR</div><div><b>Maya Rodriguez</b><small>Volunteer tutor</small></div></div></header>
+
+      <section class="view active" id="dashboard">
+        <div class="welcome-card"><div><p class="eyebrow">SEPTEMBER 2026</p><h2>Every session makes a difference.</h2><p>Record your tutoring sessions and celebrate progress as you go.</p><button class="primary-button open-session">+ Log a tutoring session</button></div><div class="welcome-art"><span class="spark spark-1">✦</span><span class="spark spark-2">✦</span><div class="book">▰</div><div class="plant">♧</div></div></div>
+        <div class="stat-grid"><article><span class="stat-icon coral">◷</span><div><b id="monthHours">8.5</b><p>Hours this month</p></div></article><article><span class="stat-icon gold">◉</span><div><b id="activeStudents">2</b><p>Active students</p></div></article><article><span class="stat-icon blue">✓</span><div><b id="goalsMet">2</b><p>Goals achieved</p></div></article></div>
+        <div class="content-grid"><section class="card"><div class="card-heading"><div><p class="eyebrow">RECENT ACTIVITY</p><h3>Your latest sessions</h3></div><button class="link-button" data-go="hours">See hour log →</button></div><div id="recentSessions" class="session-list"></div></section><section class="card progress-card"><div class="card-heading"><div><p class="eyebrow">MONTHLY PROGRESS</p><h3 id="progressMonthTitle">September hours</h3></div><label style="min-width:150px">Month<select id="progressMonthSelect"></select></label></div><div class="card-heading" style="margin-top:12px"><span class="muted">Selected month total</span><b id="progressLabel">8.5 / 10 hrs</b></div><div class="progress-track"><div id="progressBar" class="progress-bar"></div></div><p class="muted">You’re <b id="progressCopy">85%</b> of the way to your monthly goal.</p><div class="student-hours" id="studentHourBars"></div></section></div>
+      </section>
+
+      <section class="view" id="hours">
+        <div class="section-heading"><div><p class="eyebrow">SESSION TRACKER</p><h2>Hour log</h2><p>Every recorded meeting is included in your monthly report.</p></div><button class="primary-button open-session">+ Log a session</button></div>
+        <div class="filter-bar"><label>Month <select id="monthSelect"></select></label><label>Student <select id="studentFilter"><option value="all">All students</option></select></label><div class="filter-total"><b id="filteredTotal">8.5 hours</b><span>recorded</span></div></div>
+        <section class="card table-card"><table><thead><tr><th>Date</th><th>Student</th><th>Hours</th><th>Details</th><th></th></tr></thead><tbody id="hoursTable"></tbody></table><div id="emptyHours" class="empty-state hidden">No sessions match these filters.</div></section>
+      </section>
+
+      <section class="view" id="homework">
+        <div class="section-heading"><div><p class="eyebrow">ASSIGNMENTS & RECOGNITION</p><h2>Homework & credits</h2><p>Assignments are created when you log a session. Update the outcome as your students progress.</p></div><div class="achievement-total"><b id="creditTotal">0</b><span>credits earned</span></div></div>
+        <div class="filter-bar"><label>Assignment status <select id="homeworkStatus"><option value="all">All assignments</option><option value="In progress">In progress</option><option value="Completed">Completed</option><option value="Missing">Missing</option></select></label><label>Student <select id="homeworkStudent"><option value="all">All students</option></select></label><div class="filter-total"><b id="homeworkCount">0</b><span>assignments</span></div></div>
+        <section class="card table-card"><table><thead><tr><th>Student</th><th>Assignment</th><th>Due</th><th>Credits</th><th>Status</th></tr></thead><tbody id="homeworkTable"></tbody></table><div id="emptyHomework" class="empty-state hidden">No homework matches these filters.</div></section>
+      </section>
+
+      <section class="view" id="achievements">
+        <div class="section-heading"><div><p class="eyebrow">STUDENT PROGRESS</p><h2>Achievements</h2><p>Check a goal when your student reaches it. Changes save automatically.</p></div><div class="achievement-total"><b id="achievementCount">2</b><span>goals met</span></div></div>
+        <div id="achievementStudents" class="achievement-students"></div>
+      </section>
+
+      <section class="view" id="report">
+        <div class="section-heading report-heading"><div><p class="eyebrow">REPORT ARCHIVE</p><h2>Monthly report</h2><p>Select any month with held sessions to open, export, print, or send its report.</p></div><div class="button-row"><button class="secondary-button" id="downloadCsv">⇩ Download CSV</button><button class="secondary-button" id="submitReport">Send to staff</button><button class="primary-button" id="printReport">Print report</button></div></div>
+        <div class="filter-bar report-filter"><label>Available report <select id="reportMonthSelect"></select></label><div class="filter-total"><b id="reportSessions">0 sessions</b><span>in selected report</span></div></div>
+        <section class="report-paper" id="printableReport"><div class="report-top"><div><div class="report-brand">LVAEP</div><p>Literacy Volunteers of America, Essex/Passaic County</p></div><div class="report-period"><b>Monthly Attendance & Achievement Report</b><span id="reportPeriod">September 2026</span></div></div><div class="report-meta"><div><span>Tutor</span><b>Maya Rodriguez</b></div><div><span>Tutoring site</span><b id="reportSite">Bloomfield Public Library</b></div><div><span>Report status</span><b class="status-complete" id="reportStatus">Complete</b></div></div><div class="report-section"><h3>Attendance summary</h3><table><thead><tr><th>Student</th><th>Sessions</th><th>Hours</th><th>Meeting days / times</th></tr></thead><tbody id="reportRows"></tbody><tfoot><tr><td colspan="2">Monthly total</td><td id="reportTotal">8.5</td><td></td></tr></tfoot></table></div><div class="report-section"><h3>Achievements attained</h3><div id="reportAchievements" class="report-achievements"></div></div><div class="report-footer"><span>Prepared in LVAEP Tutor Hub</span><span>Questions? info@lvaep.org · (973) 566-6200 x216</span></div></section>
+      </section>
+
+      <section class="view" id="students">
+        <div class="section-heading"><div><p class="eyebrow">YOUR CASELOAD</p><h2>My students</h2><p>View your current assignments or let staff know when tutoring has ended.</p></div></div><div class="filter-bar"><label>Show hours for <select id="studentMonthSelect"></select></label></div><section class="card site-request"><div><p class="eyebrow">TUTORING SITE</p><h3 id="currentSite">Bloomfield Public Library</h3><p class="muted">Requests notify staff and every affected student. Changes appear only on the latest report and can be reversed if denied.</p></div><button class="primary-button" data-change="site" data-recipient="staff-and-student">Notify staff & students</button></section><div id="studentCards" class="student-card-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="sessionModal"><form method="dialog" id="sessionForm" class="modal"><div class="modal-heading"><div><p class="eyebrow">NEW ENTRY</p><h2>Log a tutoring session</h2></div><button type="button" class="close-button cancel-dialog" aria-label="Close">×</button></div><div class="form-grid"><label>Date<input id="sessionDate" type="date" required /></label><label>Student<select id="sessionStudent" required></select></label><label>Hours<input id="sessionHours" type="number" min="0.25" max="12" step="0.25" placeholder="e.g., 1.5" required /></label><label>Session status<select id="sessionStatus"><option value="Held">Held</option><option value="Student absent">Student absent</option><option value="Tutor absent">Tutor absent</option><option value="Holiday">Holiday</option></select></label><label class="full-width">Notes <textarea id="sessionNotes" rows="3" placeholder="What did you work on? (optional)"></textarea></label></div><div class="homework-toggle"><label><input id="assignHomework" type="checkbox" /> Assign homework from this session</label></div><div id="homeworkFields" class="form-grid homework-fields hidden"><label class="full-width">Assignment<input id="homeworkTitle" type="text" placeholder="e.g., Complete pages 12–15" /></label><label>Due date<input id="homeworkDue" type="date" /></label><label>Credits<input id="homeworkCredits" type="number" min="1" max="100" step="1" value="5" /></label><label id="asyncHomeworkConfirm" class="full-width hidden"><input id="confirmAsyncHomework" type="checkbox" /> I confirm this homework was assigned outside the tutoring session.</label></div><div class="modal-actions"><button type="button" class="secondary-button cancel-dialog">Cancel</button><button type="submit" class="primary-button">Save session</button></div></form></dialog>
+
+  <dialog id="removeModal"><form method="dialog" id="removeForm" class="modal"><div class="modal-heading"><div><p class="eyebrow">STAFF REQUEST</p><h2>End tutoring assignment</h2></div><button type="button" class="close-button cancel-dialog" aria-label="Close">×</button></div><p id="removeIntro">Let staff know why tutoring has ended. Your student will remain active until they review the request.</p><label>Reason for ending tutoring<textarea id="removeReason" rows="4" placeholder="Briefly describe the reason" required></textarea></label><div class="modal-actions"><button type="button" class="secondary-button cancel-dialog">Cancel</button><button type="submit" class="danger-button">Send request to staff</button></div></form></dialog>
+  <dialog id="reportModal"><form method="dialog" id="reportForm" class="modal"><div class="modal-heading"><div><p class="eyebrow">STAFF REQUEST</p><h2>Submit monthly report</h2></div><button type="button" class="close-button cancel-dialog" aria-label="Close">×</button></div><p id="reportIntro">Send this report to LVAEP staff for review.</p><label>Message to staff <textarea id="reportMessage" rows="4" placeholder="Optional note for staff"></textarea></label><div class="modal-actions"><button type="button" class="secondary-button cancel-dialog">Cancel</button><button type="submit" class="primary-button">Submit report to staff</button></div></form></dialog>
+  <dialog id="changeModal"><form method="dialog" id="changeForm" class="modal"><div class="modal-heading"><div><p class="eyebrow">CHANGE REQUEST</p><h2 id="changeTitle">Request a change</h2></div><button type="button" class="close-button cancel-dialog" aria-label="Close">×</button></div><p id="changeIntro"></p><div id="changeValueLabel" class="form-grid full-width"><label>Session date<select id="changeDate" required></select></label><label>Session time<select id="changeTime" required></select></label></div><label>Message <textarea id="changeMessage" rows="3" placeholder="Optional context for the request"></textarea></label><p class="muted">The requested detail will appear immediately on the latest monthly report. It can be reversed if either staff or the student denies the request.</p><div class="modal-actions"><button type="button" class="secondary-button cancel-dialog">Cancel</button><button type="submit" class="primary-button">Notify staff & student</button></div></form></dialog>
+  <div id="toast" role="status"></div>
+
+<script>
+'use strict';
+
+/* =========================================================
+   LVAEP TUTOR HUB — SELF-CONTAINED APP
+========================================================= */
+
+const seed={
+  sessions:[
+    {id:1,date:'2026-09-03',studentId:'jordan',hours:1.5,status:'Held',notes:'Reading comprehension and vocabulary'},
+    {id:2,date:'2026-09-08',studentId:'amina',hours:1,status:'Held',notes:'Conversation practice and goal setting'},
+    {id:3,date:'2026-09-10',studentId:'jordan',hours:1.5,status:'Held',notes:'Workplace forms and writing'},
+    {id:4,date:'2026-09-15',studentId:'amina',hours:1,status:'Held',notes:'Library resources and reading'},
+    {id:5,date:'2026-09-17',studentId:'jordan',hours:1.5,status:'Held',notes:'Digital literacy practice'},
+    {id:6,date:'2026-09-22',studentId:'amina',hours:1.5,status:'Held',notes:'Reading fluency and discussion'},
+    {id:7,date:'2026-09-24',studentId:'jordan',hours:.5,status:'Held',notes:'Check-in and homework review'}
+  ],
+  students:[
+    {id:'jordan',name:'Jordan Lee',initials:'JL',focus:'Adult literacy · Workplace readiness',color:'#2f827d',goals:{
+      economic:['Enter Employment','Achieve work-based project learner goal'],
+      educational:['Increase involvement in school activities'],
+      family:['Read to child(ren)'],
+      community:[]
+    }},
+    {id:'amina',name:'Amina Hassan',initials:'AH',focus:'English language learning · Community engagement',color:'#cf8767',goals:{
+      economic:['Retain Employment'],
+      educational:['Achieve civics skills'],
+      family:[],
+      community:['Increase involvement in community activities']
+    }}
+  ],
+  homework:[
+    {id:101,sessionId:1,studentId:'jordan',title:'Read pages 12–15 and note new words',due:'2026-09-08',credits:5,status:'Completed'},
+    {id:102,sessionId:3,studentId:'jordan',title:'Complete workplace application draft',due:'2026-09-17',credits:10,status:'In progress'},
+    {id:103,sessionId:6,studentId:'amina',title:'Practice new vocabulary with flashcards',due:'2026-09-29',credits:5,status:'Missing'}
+  ],
+  requests:[],
+  reportRequests:[],
+  tutoringSite:'Bloomfield Public Library',
+  tutoringTimes:{jordan:'Tuesdays · 5:00 PM',amina:'Thursdays · 6:00 PM'},
+  changeRequests:[],
+  reportOverrides:{},
+  achievementHistory:[]
+};
+
+function deepClone(value){return JSON.parse(JSON.stringify(value));}
+
+let data;
+try{
+  const saved=localStorage.getItem('lvaepTutorHub');
+  data=saved?JSON.parse(saved):deepClone(seed);
+}catch(error){
+  data=deepClone(seed);
+}
+
+function normalizeData(){
+  if(!data||typeof data!=='object')data=deepClone(seed);
+  data.sessions=Array.isArray(data.sessions)?data.sessions:[];
+  data.students=Array.isArray(data.students)?data.students:[];
+  data.homework=Array.isArray(data.homework)?data.homework:[];
+  data.requests=Array.isArray(data.requests)?data.requests:[];
+  data.reportRequests=Array.isArray(data.reportRequests)?data.reportRequests:[];
+  data.changeRequests=Array.isArray(data.changeRequests)?data.changeRequests:[];
+  data.achievementHistory=Array.isArray(data.achievementHistory)?data.achievementHistory:[];
+  data.tutoringSite=typeof data.tutoringSite==='string'&&data.tutoringSite.trim()?data.tutoringSite:'Bloomfield Public Library';
+  data.tutoringTimes=data.tutoringTimes&&typeof data.tutoringTimes==='object'?data.tutoringTimes:{};
+  data.reportOverrides=data.reportOverrides&&typeof data.reportOverrides==='object'?data.reportOverrides:{};
+
+  data.students.forEach(s=>{
+    s.goals=s.goals&&typeof s.goals==='object'?s.goals:{};
+    ['economic','educational','family','community'].forEach(group=>{
+      if(!Array.isArray(s.goals[group]))s.goals[group]=[];
+    });
+  });
+}
+normalizeData();
+
+let selectedMonth='2026-09';
+let progressMonth='2026-09';
+let reportMonth='2026-09';
+let studentMonth='2026-09';
+let removing=null;
+let changeType='';
+let changeRecipient='';
+let changeStudent='';
+
+const $=selector=>document.querySelector(selector);
+const $$=selector=>[...document.querySelectorAll(selector)];
+
+function save(){
+  try{localStorage.setItem('lvaepTutorHub',JSON.stringify(data));}
+  catch(error){console.error(error);notice('Could not save changes in this browser.');}
+}
+
+function student(id){return data.students.find(s=>s.id===id);}
+function month(value){return typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)?value.slice(0,7):'';}
+function sessions(m){return data.sessions.filter(s=>month(s.date)===m);}
+function heldSessions(m){return sessions(m).filter(s=>s.status==='Held');}
+function sum(items){return items.reduce((total,item)=>{const n=Number(item?.hours);return total+(Number.isFinite(n)&&n>0?n:0);},0);}
+function hours(n){const value=Number(n)||0;return (Number.isInteger(value)?value:value.toFixed(1))+' hrs';}
+function reportMonths(){return [...new Set(data.sessions.filter(s=>s.status==='Held').map(s=>month(s.date)).filter(Boolean))].sort().reverse();}
+function label(m){if(!/^\d{4}-\d{2}$/.test(m||''))return 'Unknown month';return new Date(m+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'});}
+function date(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d||''))return '—';return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function escapeHTML(value){return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+function csvCell(value){return '"'+String(value??'').replace(/"/g,'""')+'"';}
+function nextId(list){const nums=list.map(x=>Number(x.id)).filter(Number.isFinite);return nums.length?Math.max(...nums)+1:Date.now();}
+function notice(message){
+  const toast=$('#toast');if(!toast)return;
+  toast.textContent=message;toast.classList.add('show');
+  clearTimeout(notice.timer);
+  notice.timer=setTimeout(()=>toast.classList.remove('show'),3000);
+}
+function options(selector,items,value){
+  const element=$(selector);if(!element)return;
+  element.innerHTML=items.map(item=>'<option value="'+escapeHTML(item.value)+'">'+escapeHTML(item.text)+'</option>').join('');
+  if(items.some(item=>item.value===value))element.value=value;
+  else if(items.length)element.value=items[0].value;
+}
+
+const goalList={
+  economic:['Enter Employment','Retain Employment','Enter Occupational Skills Training Program','Enter Postsecondary Education','Obtain High School Diploma','Leave public assistance','Achieve work-based project learner goal'],
+  educational:['Help more frequently with school','Increase contact with teachers','Increase involvement in school activities','Purchase books or magazines','Read to child(ren)','Visit the library'],
+  family:['Obtain citizenship','Achieve civics skills'],
+  community:['Increase involvement in community activities','Vote or register to vote']
+};
+
+function latestReportMonth(){return reportMonths()[0]||'';}
+
+function latestDetails(m=latestReportMonth()){
+  const base={site:data.tutoringSite,times:{...data.tutoringTimes}};
+  const override=m&&data.reportOverrides[m];
+  if(!override)return base;
+  return {site:override.site||base.site,times:{...base.times,...(override.times||{})}};
+}
+
+/* Goal records are saved with a month when checked.
+   Existing seed goals are treated as present in September 2026. */
+function achievementRecordsForMonth(m){
+  const records=[];
+  const seen=new Set();
+
+  data.achievementHistory.filter(r=>r.month===m&&r.status==='met').forEach(record=>{
+    const key=record.studentId+'|'+record.goal;
+    if(!seen.has(key)){
+      seen.add(key);
+      records.push(record);
+    }
+  });
+
+  // Preserve the supplied September example achievements for the initial report.
+  // Once a user changes an achievement, history becomes the source of truth.
+  if(m==='2026-09' && !data.achievementHistory.some(r=>r.month===m)){
+    data.students.forEach(s=>{
+      Object.values(s.goals||{}).flat().forEach(goal=>{
+        const key=s.id+'|'+goal;
+        if(!seen.has(key)){
+          seen.add(key);
+          records.push({studentId:s.id,goal,month:m,status:'met',seeded:true});
+        }
+      });
+    });
+  }
+
+  return records;
+}
+
+function setup(){
+  const months=[...new Set(data.sessions.map(s=>month(s.date)).filter(Boolean))].sort().reverse();
+  if(months.length){
+    if(!months.includes(selectedMonth))selectedMonth=months[0];
+    if(!months.includes(progressMonth))progressMonth=months[0];
+    if(!months.includes(studentMonth))studentMonth=months[0];
+  }else{
+    selectedMonth='2026-09';progressMonth='2026-09';studentMonth='2026-09';
+  }
+
+  options('#monthSelect',months.map(m=>({value:m,text:label(m)})),selectedMonth);
+  options('#progressMonthSelect',months.map(m=>({value:m,text:label(m)})),progressMonth);
+  options('#studentMonthSelect',months.map(m=>({value:m,text:label(m)})),studentMonth);
+
+  const students=[{value:'all',text:'All students'},...data.students.map(s=>({value:s.id,text:s.name}))];
+  options('#studentFilter',students,$('#studentFilter')?.value||'all');
+  options('#homeworkStudent',students,$('#homeworkStudent')?.value||'all');
+
+  const sessionStudent=$('#sessionStudent');
+  if(sessionStudent){
+    const old=sessionStudent.value;
+    sessionStudent.innerHTML=data.students.map(s=>'<option value="'+escapeHTML(s.id)+'">'+escapeHTML(s.name)+'</option>').join('');
+    if(data.students.some(s=>s.id===old))sessionStudent.value=old;
+  }
+
+  const reports=reportMonths();
+  if(!reports.includes(reportMonth))reportMonth=reports[0]||'';
+  options('#reportMonthSelect',reports.map(m=>({value:m,text:label(m)})),reportMonth);
+}
+
+function dashboard(){
+  const held=heldSessions(progressMonth);
+  const total=sum(held);
+  const goals=data.students.reduce((n,s)=>n+Object.values(s.goals||{}).flat().length,0);
+
+  if($('#monthHours'))$('#monthHours').textContent=total;
+  if($('#activeStudents'))$('#activeStudents').textContent=data.students.length;
+  if($('#goalsMet'))$('#goalsMet').textContent=goals;
+  if($('#progressMonthTitle'))$('#progressMonthTitle').textContent=label(progressMonth)+' hours';
+  if($('#progressLabel'))$('#progressLabel').textContent=total+' / 10 hrs';
+  if($('#progressCopy'))$('#progressCopy').textContent=Math.min(100,Math.round(total*10))+'%';
+  if($('#progressBar'))$('#progressBar').style.width=Math.min(100,total*10)+'%';
+
+  $('#recentSessions').innerHTML=data.sessions.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,4).map(s=>{
+    const person=student(s.studentId);
+    const d=/^\d{4}-\d{2}-\d{2}$/.test(s.date)?new Date(s.date+'T12:00:00'):null;
+    return '<div class="session-row"><div class="session-date">'+(d?d.getDate():'—')+'<small>'+(d?d.toLocaleDateString('en-US',{month:'short'}):'')+'</small></div><div><span class="session-name">'+escapeHTML(person?.name||'Unknown student')+'</span><span class="session-note">'+escapeHTML(s.notes||s.status||'')+'</span></div><span class="session-time">'+escapeHTML(hours(s.hours))+'</span></div>';
+  }).join('');
+
+  $('#studentHourBars').innerHTML=data.students.map(st=>{
+    const h=sum(held.filter(s=>s.studentId===st.id));
+    return '<div class="student-hour-row"><span>'+escapeHTML(st.name.split(' ')[0])+'</span><div class="mini-track"><div class="mini-bar" style="width:'+Math.min(100,h*20)+'%"></div></div><b>'+escapeHTML(h)+'</b></div>';
+  }).join('');
+}
+
+function log(){
+  const who=$('#studentFilter')?.value||'all';
+  const list=sessions(selectedMonth).filter(s=>who==='all'||s.studentId===who).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  $('#filteredTotal').textContent=hours(sum(list.filter(s=>s.status==='Held')));
+  $('#hoursTable').innerHTML=list.map(s=>{
+    const person=student(s.studentId);
+    return '<tr><td>'+escapeHTML(date(s.date))+'</td><td><b>'+escapeHTML(person?.name||'Unknown student')+'</b></td><td>'+(s.status==='Held'?escapeHTML(s.hours):'—')+'</td><td><span class="status-pill">'+escapeHTML(s.status||'Unknown')+'</span><span class="session-note">'+escapeHTML(s.notes||'')+'</span></td><td><button type="button" class="session-delete" data-delete="'+escapeHTML(s.id)+'" aria-label="Delete session">×</button></td></tr>';
+  }).join('');
+  $('#emptyHours').classList.toggle('hidden',!!list.length);
+}
+
+function homework(){
+  const status=$('#homeworkStatus')?.value||'all';
+  const who=$('#homeworkStudent')?.value||'all';
+  const list=data.homework.filter(h=>(status==='all'||h.status===status)&&(who==='all'||h.studentId===who));
+  $('#creditTotal').textContent=data.homework.filter(h=>h.status==='Completed').reduce((n,h)=>n+(Number(h.credits)||0),0);
+  $('#homeworkCount').textContent=list.length;
+  $('#homeworkTable').innerHTML=list.map(h=>{
+    const person=student(h.studentId);
+    return '<tr><td><b>'+escapeHTML(person?.name||'Unknown student')+'</b></td><td>'+escapeHTML(h.title)+'</td><td>'+escapeHTML(date(h.due))+'</td><td>'+escapeHTML(h.credits)+'</td><td><select data-homework="'+escapeHTML(h.id)+'"><option '+(h.status==='In progress'?'selected':'')+'>In progress</option><option '+(h.status==='Completed'?'selected':'')+'>Completed</option><option '+(h.status==='Missing'?'selected':'')+'>Missing</option></select></td></tr>';
+  }).join('');
+  $('#emptyHomework').classList.toggle('hidden',!!list.length);
+}
+
+function achievements(){
+  $('#achievementCount').textContent=data.students.reduce((n,s)=>n+Object.values(s.goals||{}).flat().length,0);
+  $('#achievementStudents').innerHTML=data.students.map(s=>'<article class="achievement-card"><header class="achievement-card-head"><div class="initial" style="background:'+escapeHTML(s.color)+'">'+escapeHTML(s.initials)+'</div><div><h3>'+escapeHTML(s.name)+'</h3><p>'+escapeHTML(s.focus)+'</p></div></header><div class="goals-grid">'+Object.entries(goalList).map(([group,items])=>'<div class="goal-group"><h4>'+escapeHTML(group)+'</h4>'+items.map(g=>{const done=(s.goals[group]||[]).includes(g);return '<label class="goal-option '+(done?'done':'')+'"><input type="checkbox" '+(done?'checked':'')+' data-student="'+escapeHTML(s.id)+'" data-group="'+escapeHTML(group)+'" data-goal="'+escapeHTML(g)+'"><span>'+escapeHTML(g)+'</span></label>';}).join('')+'</div>').join('')+'</div></article>').join('');
+}
+
+function report(){
+  if(!reportMonth){
+    $('#reportPeriod').textContent='No held sessions yet';
+    $('#reportSite').textContent=data.tutoringSite;
+    $('#reportSessions').textContent='0 sessions';
+    $('#reportStatus').textContent='No report available';
+    $('#reportRows').innerHTML='';
+    $('#reportTotal').textContent='0';
+    $('#reportAchievements').innerHTML='<div class="report-achievement">No monthly activity has been recorded yet.</div>';
+    return;
+  }
+
+  const list=heldSessions(reportMonth);
+  const detail=latestDetails(reportMonth);
+
+  $('#reportPeriod').textContent=label(reportMonth);
+  $('#reportSite').textContent=detail.site;
+  $('#reportSessions').textContent=list.length+' sessions';
+  $('#reportStatus').textContent=data.reportRequests.some(r=>r.month===reportMonth)?'Submitted to staff':'Complete';
+
+  $('#reportRows').innerHTML=data.students.map(st=>{
+    const a=list.filter(s=>s.studentId===st.id);
+    const weekdays=[...new Set(a.map(s=>new Date(s.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'short'})))];
+    const time=detail.times?.[st.id]||'Not scheduled';
+    return '<tr><td><b>'+escapeHTML(st.name)+'</b></td><td>'+a.length+'</td><td>'+escapeHTML(sum(a))+'</td><td>'+(a.length?escapeHTML(weekdays.join(', '))+' · '+escapeHTML(time):'—')+'</td></tr>';
+  }).join('');
+
+  $('#reportTotal').textContent=sum(list);
+
+  /* Monthly achievement section: only show goals/achievements
+     associated with the selected report month and active students. */
+  const activeIds=new Set(list.map(s=>s.studentId));
+  const records=achievementRecordsForMonth(reportMonth).filter(r=>activeIds.has(r.studentId));
+
+  if(!records.length){
+    $('#reportAchievements').innerHTML='<div class="report-achievement">No achievements recorded for students with held sessions this month.</div>';
+  }else{
+    $('#reportAchievements').innerHTML=records.map(r=>{
+      const person=student(r.studentId);
+      return '<div class="report-achievement"><b>'+escapeHTML(person?.name||'Unknown student')+':</b> '+escapeHTML(r.goal)+'</div>';
+    }).join('');
+  }
+}
+
+function students(){
+  const detail=latestDetails();
+  $('#currentSite').textContent=detail.site;
+  $('#studentCards').innerHTML=data.students.map(s=>{
+    const h=sum(sessions(studentMonth).filter(x=>x.studentId===s.id&&x.status==='Held'));
+    const scheduled=detail.times?.[s.id]||'Not scheduled';
+    return '<article class="student-card"><div class="student-card-head"><div class="initial" style="background:'+escapeHTML(s.color)+'">'+escapeHTML(s.initials)+'</div><div><h3>'+escapeHTML(s.name)+'</h3><p>'+escapeHTML(s.focus)+'</p></div></div><div class="student-stats"><div><b>'+escapeHTML(h)+'</b><span>held hours in '+escapeHTML(label(studentMonth))+'</span></div><div><b>'+escapeHTML(scheduled)+'</b><span>scheduled tutoring time</span></div></div><div class="button-row"><button type="button" class="primary-button" data-change="time" data-recipient="staff-and-student" data-student="'+escapeHTML(s.id)+'">Notify staff & student</button></div><br><button type="button" class="secondary-button" data-remove="'+escapeHTML(s.id)+'">Request to end tutoring</button></article>';
+  }).join('');
+}
+
+function render(){setup();dashboard();log();homework();achievements();report();students();}
+
+function view(v){
+  const b=$('[data-view="'+v+'"]');
+  $$('.nav-item').forEach(x=>x.classList.toggle('active',x===b));
+  $$('.view').forEach(x=>x.classList.toggle('active',x.id===v));
+  $('#pageTitle').textContent=v==='dashboard'?'Good morning, Maya':(b?.textContent||'').trim();
+  $('.sidebar')?.classList.remove('open');
+}
+
+$$('.nav-item').forEach(b=>b.addEventListener('click',()=>view(b.dataset.view)));
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>{
+  const target=b.dataset.go;
+  if(target){view(target);}
+}));
+
+function updateSessionState(){
+  const held=$('#sessionStatus').value==='Held';
+  const assigned=$('#assignHomework').checked;
+  $('#sessionHours').disabled=!held;
+  if(!held)$('#sessionHours').value='';
+  $('#asyncHomeworkConfirm').classList.toggle('hidden',!assigned||held);
+  if(held)$('#confirmAsyncHomework').checked=false;
+}
+
+$$('.open-session').forEach(b=>b.addEventListener('click',()=>{
+  $('#sessionDate').value=new Date().toISOString().slice(0,10);
+  $('#sessionHours').value='';
+  $('#sessionStatus').value='Held';
+  $('#sessionNotes').value='';
+  $('#assignHomework').checked=false;
+  $('#confirmAsyncHomework').checked=false;
+  $('#homeworkTitle').value='';
+  $('#homeworkDue').value='';
+  $('#homeworkCredits').value='5';
+  $('#homeworkFields').classList.add('hidden');
+  updateSessionState();
+  $('#sessionModal').showModal();
+}));
+
+$('#assignHomework').addEventListener('change',e=>{
+  $('#homeworkFields').classList.toggle('hidden',!e.target.checked);
+  updateSessionState();
+});
+$('#sessionStatus').addEventListener('change',updateSessionState);
+$$('.cancel-dialog').forEach(b=>b.addEventListener('click',()=>b.closest('dialog')?.close()));
+
+$('#sessionForm').addEventListener('submit',e=>{
+  e.preventDefault();
+
+  const held=$('#sessionStatus').value==='Held';
+  const assigned=$('#assignHomework').checked;
+  const sessionDate=$('#sessionDate').value;
+  const studentId=$('#sessionStudent').value;
+
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(sessionDate)){notice('Choose a valid session date.');return;}
+  if(!student(studentId)){notice('Choose a valid student.');return;}
+
+  let sessionHours=0;
+  if(held){
+    sessionHours=Number($('#sessionHours').value);
+    if(!Number.isFinite(sessionHours)||sessionHours<.25||sessionHours>12){notice('Enter session hours between 0.25 and 12.');return;}
+  }
+
+  const title=$('#homeworkTitle').value.trim();
+  if(assigned&&!title){notice('Add a homework title first.');return;}
+  if(assigned&&!held&&!$('#confirmAsyncHomework').checked){notice('Confirm that homework was assigned outside the tutoring session.');return;}
+
+  if(assigned){
+    const due=$('#homeworkDue').value||sessionDate;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(due)){notice('Choose a valid homework due date.');return;}
+  }
+
+  const session={id:nextId(data.sessions),date:sessionDate,studentId,hours:held?sessionHours:0,status:$('#sessionStatus').value,notes:$('#sessionNotes').value.trim()};
+  data.sessions.push(session);
+
+  if(assigned){
+    const credits=Number($('#homeworkCredits').value||0);
+    data.homework.push({
+      id:nextId(data.homework),
+      sessionId:session.id,
+      studentId,
+      title,
+      due:$('#homeworkDue').value||sessionDate,
+      credits:Number.isFinite(credits)&&credits>=0?credits:0,
+      status:'In progress'
+    });
+  }
+
+  selectedMonth=month(sessionDate);
+  if(held)reportMonth=selectedMonth;
+  save();
+  $('#sessionModal').close();
+  render();
+  notice(assigned?'Session and homework saved.':'Session saved and monthly report updated.');
+});
+
+$('#progressMonthSelect').addEventListener('change',e=>{progressMonth=e.target.value;dashboard();});
+$('#monthSelect').addEventListener('change',e=>{selectedMonth=e.target.value;log();});
+$('#studentMonthSelect').addEventListener('change',e=>{studentMonth=e.target.value;students();});
+$('#studentFilter').addEventListener('change',log);
+
+$('#hoursTable').addEventListener('click',e=>{
+  const button=e.target.closest('[data-delete]');
+  if(!button)return;
+  const id=Number(button.dataset.delete);
+  const session=data.sessions.find(s=>Number(s.id)===id);
+  if(!session){notice('Session not found.');return;}
+  if(!confirm('Delete this session? Any homework linked to it will also be removed.'))return;
+
+  data.sessions=data.sessions.filter(s=>Number(s.id)!==id);
+  data.homework=data.homework.filter(h=>Number(h.sessionId)!==id);
+
+  const reports=reportMonths();
+  if(!reports.includes(reportMonth))reportMonth=reports[0]||'';
+  save();render();notice('Session and linked homework removed.');
+});
+
+$('#homeworkStatus').addEventListener('change',homework);
+$('#homeworkStudent').addEventListener('change',homework);
+
+$('#homeworkTable').addEventListener('change',e=>{
+  const select=e.target.closest('[data-homework]');
+  if(!select)return;
+  const h=data.homework.find(x=>Number(x.id)===Number(select.dataset.homework));
+  if(!h){notice('Homework item not found.');return;}
+  h.status=select.value;
+  save();homework();notice('Homework status updated.');
+});
+
+$('#achievementStudents').addEventListener('change',e=>{
+  const box=e.target.closest('input[data-student]');
+  if(!box)return;
+  const s=student(box.dataset.student);
+  if(!s)return;
+
+  const group=box.dataset.group;
+  const goal=box.dataset.goal;
+  if(!s.goals[group])s.goals[group]=[];
+
+  const latest=latestReportMonth()||selectedMonth||'2026-09';
+
+  if(box.checked){
+    if(!s.goals[group].includes(goal))s.goals[group].push(goal);
+
+    const already=data.achievementHistory.some(r=>r.studentId===s.id&&r.goal===goal&&r.month===latest&&r.status==='met');
+    if(!already)data.achievementHistory.push({id:nextId(data.achievementHistory),studentId:s.id,goal,month:latest,status:'met',createdAt:new Date().toISOString()});
+  }else{
+    s.goals[group]=s.goals[group].filter(g=>g!==goal);
+    data.achievementHistory=data.achievementHistory.filter(r=>!(r.studentId===s.id&&r.goal===goal&&r.month===latest));
+  }
+
+  save();achievements();dashboard();report();notice(box.checked?'Achievement recorded.':'Achievement unchecked.');
+});
+
+function buildChangeDateOptions(currentValue=''){
+  const select=$('#changeDate');
+  if(!select)return;
+  const base=new Date();
+  base.setHours(12,0,0,0);
+  const dates=[];
+  for(let i=0;i<14;i++){
+    const d=new Date(base);
+    d.setDate(base.getDate()+i);
+    const value=d.toISOString().slice(0,10);
+    dates.push({value,text:d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric'})});
+  }
+  options('#changeDate',dates,currentValue&&dates.some(x=>x.value===currentValue)?currentValue:dates[0].value);
+}
+
+function buildChangeTimeOptions(currentValue=''){
+  const times=[];
+  for(let minutes=8*60;minutes<=20*60;minutes+=30){
+    const hour24=Math.floor(minutes/60), minute=minutes%60;
+    const d=new Date(2000,0,1,hour24,minute);
+    const value=String(hour24).padStart(2,'0')+':'+String(minute).padStart(2,'0');
+    times.push({value,text:d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})});
+  }
+  options('#changeTime',times,times.some(x=>x.value===currentValue)?currentValue:'17:00');
+}
+
+function parseScheduledTime(value){
+  const match=String(value||'').match(/(\\d{1,2})(?::(\\d{2}))?\\s*(AM|PM)/i);
+  if(!match)return '17:00';
+  let hour=Number(match[1]), minute=Number(match[2]||0);
+  const ap=match[3].toUpperCase();
+  if(ap==='PM'&&hour<12)hour+=12;
+  if(ap==='AM'&&hour===12)hour=0;
+  return String(hour).padStart(2,'0')+':'+String(minute).padStart(2,'0');
+}
+
+function openChange(type,recipient,studentId){
+  changeType=type;
+  changeRecipient=recipient;
+  changeStudent=studentId||'';
+
+  const person=student(studentId);
+  const detail=latestDetails();
+  const existing=studentId?detail.times?.[studentId]:'';
+
+  $('#changeTitle').textContent=type==='site'?'Request tutoring site change':'Request tutoring time change';
+  $('#changeIntro').textContent=type==='site'
+    ?'This request will notify LVAEP staff and the affected students about the proposed tutoring site change.'
+    :'Choose a session date and a start time between 8:00 AM and 8:00 PM. The request will notify LVAEP staff and '+(person?.name||'the affected student')+'.';
+
+  if(type==='site'){
+    // Site changes remain text-based.
+    $('#changeValueLabel').innerHTML='<label class="full-width">New tutoring site<input id="changeSiteValue" type="text" required /></label>';
+    $('#changeSiteValue').value=detail.site||'';
+  }else{
+    $('#changeValueLabel').innerHTML='<label>Session date<select id="changeDate" required></select></label><label>Session time<select id="changeTime" required></select></label>';
+    buildChangeDateOptions('');
+    buildChangeTimeOptions(parseScheduledTime(existing));
+  }
+
+  $('#changeMessage').value='';
+  $('#changeModal').showModal();
+}
+
+$('#studentCards').addEventListener('click',e=>{
+  const removeButton=e.target.closest('[data-remove]');
+  if(removeButton){
+    const id=removeButton.dataset.remove;
+    const person=student(id);
+    if(!person)return;
+    removing=id;
+    $('#removeIntro').textContent='Let staff know why tutoring with '+person.name+' has ended.';
+    $('#removeReason').value='';
+    $('#removeModal').showModal();
+    return;
+  }
+
+  const changeButton=e.target.closest('[data-change]');
+  if(changeButton){
+    openChange(changeButton.dataset.change,changeButton.dataset.recipient||'staff-and-student',changeButton.dataset.student||'');
+  }
+});
+
+$$('[data-change="site"]').forEach(b=>b.addEventListener('click',()=>openChange('site','staff-and-student','')));
+
+$('#removeForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!removing||!student(removing)){notice('Student not found.');return;}
+  const reason=$('#removeReason').value.trim();
+  if(!reason){notice('Add a short reason for the request.');return;}
+
+  data.requests.push({id:nextId(data.requests),studentId:removing,reason,createdAt:new Date().toISOString()});
+  save();$('#removeModal').close();removing=null;students();notice('Request sent to LVAEP staff.');
+});
+
+$('#changeForm').addEventListener('submit',e=>{
+  e.preventDefault();
+
+  let value='';
+  if(changeType==='site'){
+    value=$('#changeSiteValue')?.value.trim()||'';
+    if(!value){notice('Enter a proposed site first.');return;}
+  }else{
+    const dateValue=$('#changeDate')?.value||'';
+    const timeValue=$('#changeTime')?.value||'';
+    if(!dateValue||!timeValue){notice('Choose a session date and time.');return;}
+    value=dateValue+'T'+timeValue;
+  }
+
+  const latest=latestReportMonth();
+  const current=latestDetails(latest);
+  const detail={site:current.site,times:{...current.times}};
+
+  if(changeType==='site')detail.site=value;
+  else{
+    if(!student(changeStudent)){notice('Student not found.');return;}
+    const d=new Date(value);
+    const day=d.toLocaleDateString('en-US',{weekday:'long'});
+    const time=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    detail.times[changeStudent]=day+' · '+time;
+  }
+
+  if(latest)data.reportOverrides[latest]=detail;
+  else if(changeType==='site')data.tutoringSite=value;
+  else data.tutoringTimes[changeStudent]=value;
+
+  data.changeRequests.push({
+    id:nextId(data.changeRequests),
+    type:changeType,
+    recipient:changeRecipient||'staff-and-student',
+    studentId:changeStudent,
+    value,
+    message:$('#changeMessage').value.trim(),
+    reportMonth:latest||null,
+    createdAt:new Date().toISOString()
+  });
+
+  save();$('#changeModal').close();render();notice('Request sent and saved.');
+});
+
+$('#reportMonthSelect').addEventListener('change',e=>{reportMonth=e.target.value;report();});
+
+$('#submitReport').addEventListener('click',()=>{
+  if(!reportMonth){notice('Log a held session before submitting a report.');return;}
+  $('#reportIntro').textContent='Send the '+label(reportMonth)+' attendance and achievement report to LVAEP staff for review.';
+  $('#reportMessage').value='';
+  $('#reportModal').showModal();
+});
+
+$('#reportForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!reportMonth){notice('There is no monthly report to submit.');return;}
+
+  const existing=data.reportRequests.find(r=>r.month===reportMonth);
+  const message=$('#reportMessage').value.trim();
+
+  if(existing){
+    existing.message=message;
+    existing.updatedAt=new Date().toISOString();
+  }else{
+    data.reportRequests.push({id:nextId(data.reportRequests),month:reportMonth,message,createdAt:new Date().toISOString()});
+  }
+
+  save();$('#reportModal').close();report();notice(label(reportMonth)+' report sent to staff.');
+});
+
+$('#downloadCsv').addEventListener('click',()=>{
+  if(!reportMonth){notice('There is no report to download.');return;}
+
+  const rows=[
+    ['Date','Student','Hours','Status','Notes'],
+    ...sessions(reportMonth).map(s=>[s.date,student(s.studentId)?.name||'Unknown student',s.hours,s.status,s.notes||''])
+  ];
+
+  const csv=rows.map(row=>row.map(csvCell).join(',')).join('\r\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a');
+  a.href=url;a.download='LVAEP-'+reportMonth+'-report.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  notice('CSV report downloaded.');
+});
+
+$('#printReport').addEventListener('click',()=>{
+  if(!reportMonth){notice('There is no report to print.');return;}
+  window.print();
+});
+
+$('#mobileMenu').addEventListener('click',()=>$('.sidebar').classList.toggle('open'));
+
+$('#resetData').addEventListener('click',()=>{
+  if(!confirm('Reset all changes to the original example data?'))return;
+  data=deepClone(seed);
+  selectedMonth='2026-09';
+  progressMonth='2026-09';
+  reportMonth='2026-09';
+  studentMonth='2026-09';
+  removing=null;changeType='';changeRecipient='';changeStudent='';
+  save();render();notice('Example data restored.');
+});
+
+render();
+</script>
+</body>
+</html>
